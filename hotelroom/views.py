@@ -108,14 +108,14 @@ class AllReviewViewSet(ModelViewSet):
     queryset = Review.objects.prefetch_related('hotel').all()
     serializer_class = ReviewSerializer
 
-class SpecificUserReviewViewSet(ModelViewSet):
+class SpecificUserSpecificHotelReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes =[IsAuthenticated]
 
     def get_queryset(self):
-        return Review.objects.filter(user=self.request.user)
+        return Review.objects.filter(user=self.request.user, hotel=self.kwargs['hotel_pk'])
     
     def get_serializer_context(self):
-        return {'user': self.request.user}
+        return {'user': self.request.user, 'hotel': Hotel.objects.get(pk=self.kwargs['hotel_pk'])}
     
     
