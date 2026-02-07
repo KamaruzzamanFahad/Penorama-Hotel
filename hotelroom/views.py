@@ -102,3 +102,10 @@ class ReviewViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'hotel_id': self.kwargs['hotel_pk']}
+
+
+class AllReviewViewSet(ModelViewSet):
+    queryset = Review.objects.prefetch_related('hotel').all()
+    serializer_class = ReviewSerializer
+    
+    

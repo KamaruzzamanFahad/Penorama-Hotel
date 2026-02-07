@@ -1,5 +1,5 @@
 from django.urls import path, include
-from hotelroom.views import HotelRoomViewSet, ReviewViewSet, HotelRoomImageViewSet, HotelViewSet, BookingViewSet
+from hotelroom.views import HotelRoomViewSet,AllReviewViewSet, ReviewViewSet, HotelRoomImageViewSet, HotelViewSet, BookingViewSet
 from rest_framework_nested import routers
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -20,6 +20,7 @@ schema_view = get_schema_view(
 
 router = routers.DefaultRouter()
 router.register('hotels', HotelViewSet, basename='hotels')
+router.register('reviews', AllReviewViewSet, basename='all-reviews')
 
 hotel_router = routers.NestedDefaultRouter(router, 'hotels', lookup='hotel')
 hotel_router.register('rooms', HotelRoomViewSet, basename='hotel-rooms')
