@@ -113,9 +113,11 @@ class SpecificUserSpecificHotelReviewViewSet(ModelViewSet):
     permission_classes =[IsAuthenticated]
 
     def get_queryset(self):
-        return Review.objects.filter(user=self.request.user, hotel=self.kwargs['hotel_pk'])
-    
-    def get_serializer_context(self):
-        return {'user': self.request.user, 'hotel': Hotel.objects.get(pk=self.kwargs['hotel_pk'])}
+        hotel_id = self.request.query_params.get('hotel_id')
+        return Review.objects.filter(
+            user=self.request.user,
+            hotel_id=hotel_id
+        )
+
     
     
