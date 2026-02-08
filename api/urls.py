@@ -1,5 +1,5 @@
 from django.urls import path, include
-from hotelroom.views import HotelRoomViewSet,AllReviewViewSet,SpecificUserSpecificHotelReviewViewSet, ReviewViewSet, HotelRoomImageViewSet, HotelViewSet, BookingViewSet
+from hotelroom.views import HotelRoomViewSet,AllReviewViewSet,SpecificUserSpecificHotelReviewViewSet,AdminStatisticsViewSet, ReviewViewSet, HotelRoomImageViewSet, HotelViewSet, BookingViewSet
 from rest_framework_nested import routers
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -35,6 +35,7 @@ urlpatterns = [
     path('', include(router.urls)), 
     path('', include(hotel_router.urls)), 
     path('', include(room_router.urls)),
+    path('admin-statistics/', AdminStatisticsViewSet.as_view(), name='admin-statistics'),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

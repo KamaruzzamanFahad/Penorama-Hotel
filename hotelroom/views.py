@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from hotelroom.models import HotelRoom, Review, HotelRoomImage, Hotel,  Booking
 from hotelroom.serializer import HotelRoomModelSerializer,HotelModelSerializer, BookingSerializer, ReviewSerializer, HotelRoomImageSerializer
-from django.db.models import Count
+from django.db.models import Count, Sum, Q
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -19,6 +19,10 @@ from api.permissitions import IsAdminOrReadOnly,FullDjangoModelPermissition
 from hotelroom.permissitions import IsReviewAuthorOrReadOnly
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
+from users.models import User
+
 
 
 class HotelViewSet(ModelViewSet):
@@ -121,5 +125,77 @@ class SpecificUserSpecificHotelReviewViewSet(ModelViewSet):
             hotel_id=hotel_id
         )
 
-    
+
+class AdminStatisticsViewSet(APIView):
+    permission_classes =[IsAdminUser]
+    def get(self, request):
+        try:
+            now = timezone.now()
+            
+            first_day_of_current_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            last_day_of_prev_month = first_day_of_current_month - timedelta(days=1)
+            first_day_of_prev_month = last_day_of_prev_month.replace(day=1)
+            start_of_week = now - timedelta(days=now.weekday())
+
+            current_month_sales = Booking.objects.filter(
+                booking_date__gte=first_day_of_current_month
+            ).aggregate(total=Sum('total_cost'))['total'] or 0
+
+            prev_month_sales = Booking.objects.filter(
+                booking_date__gte=first_day_of_prev_month,
+                booking_date__lte=last_day_of_prev_month
+            ).aggregate(total=Sum('total_cost'))['total'] or 0
+
+            bookings_this_week = Booking.objects.filter(
+                booking_date__gte=start_of_week
+            ).count()
+
+            bookings_this_month = Booking.objects.filter(
+                booking_date__gte=first_day_of_current_month
+            ).count()
+
+            most_booked_rooms = HotelRoom.objects.annotate(
+                booking_count=Count('booking')
+            ).order_by('-booking_count')[:5]
+
+            most_booked_rooms_data = [
+                {
+                    "hotel": room.hotel.name if room.hotel else None,
+                    "room_number": room.room_number,
+                    "booking_count": room.booking_count
+                } for room in most_booked_rooms
+            ]
+
+            top_customers = User.objects.annotate(
+                total_spent=Sum('booking__total_cost')
+            ).filter(total_spent__gt=0).order_by('-total_spent')[:5]
+
+            top_customers_data = [
+                {
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "total_spent": float(user.total_spent) if user.total_spent else 0
+                } for user in top_customers
+            ]
+
+            return Response({
+                "sales": {
+                    "current_month": float(current_month_sales),
+                    "previous_month": float(prev_month_sales),
+                },
+                "bookings_count": {
+                    "this_week": bookings_this_week,
+                    "this_month": bookings_this_month,
+                },
+                "most_booked_rooms": most_booked_rooms_data,
+                "top_customers": top_customers_data,
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
+
+
+
+
     
