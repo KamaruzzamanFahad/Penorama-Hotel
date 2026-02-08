@@ -31,7 +31,7 @@ class HotelViewSet(ModelViewSet):
     serializer_class = HotelModelSerializer
 
 class HotelRoomViewSet(ModelViewSet):
-    queryset = HotelRoom.objects.all()
+    # queryset = HotelRoom.objects.all()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = HotelRoomFilter 
     search_fields = ['room_number', 'description']
@@ -42,6 +42,8 @@ class HotelRoomViewSet(ModelViewSet):
     def perform_create(self, serializer):
         hotel_id = self.kwargs.get('hotel_pk')
         serializer.save(hotel_id=hotel_id)
+    def get_queryset(self):
+        return HotelRoom.objects.filter(hotel_id=self.kwargs['hotel_pk'])
     
     serializer_class = HotelRoomModelSerializer
 
