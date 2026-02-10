@@ -74,7 +74,7 @@ def payment_success(request):
         return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=success")
     except:
         print("error")
-        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail&user_id={user_id}")
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail&user_id={user_id}&tran_id={tran_id}")
 
     
     
