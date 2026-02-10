@@ -90,3 +90,10 @@ def payment_cancel(request):
     return HttpResponseRedirect(
         f"{django_settings.FRONTEND_URL}dashboard/payment?status=cancel"
     )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def is_admin(request):
+    if request.user.is_staff:
+        return Response({'is_admin': True})
+    return Response({'is_admin': False})

@@ -4,7 +4,7 @@ from rest_framework_nested import routers
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api.views import initiate_payment, payment_success, payment_fail, payment_cancel
+from api.views import initiate_payment, payment_success, payment_fail, payment_cancel, is_admin
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -23,6 +23,7 @@ router = routers.DefaultRouter()
 router.register('hotels', HotelViewSet, basename='hotels')
 router.register('reviews', AllReviewViewSet, basename='all-reviews')
 router.register('my-hotel-reviews', SpecificUserSpecificHotelReviewViewSet, basename='my-hotel-reviews')
+
 
 hotel_router = routers.NestedDefaultRouter(router, 'hotels', lookup='hotel')
 hotel_router.register('rooms', HotelRoomViewSet, basename='hotel-rooms')
@@ -45,4 +46,5 @@ urlpatterns = [
     path('payment_success/', payment_success, name='payment_success'),
     path('payment_fail/', payment_fail, name='payment_fail'),
     path('payment_cancel/', payment_cancel, name='payment_cancel'),
+    path('is_admin/', is_admin, name='is_admin'),
 ]
