@@ -70,7 +70,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS=[
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://transcendent-torrone-3b8c55.netlify.app"
 ]
 
 ROOT_URLCONF = 'penorama_hotel.urls'
@@ -256,5 +257,5 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-FRONTEND_URL = "http://localhost:5173/"
+FRONTEND_URL = "https://transcendent-torrone-3b8c55.netlify.app/"
 BACKEND_URL = "https://penorama-hotel.vercel.app/api/v1/"
