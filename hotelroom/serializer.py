@@ -62,8 +62,8 @@ class BookingSerializer(serializers.ModelSerializer):
         if user.balance < total_cost:
             raise serializers.ValidationError("Insufficient balance")
 
-        if hotelroom.status == True:
-            raise serializers.ValidationError("Hotel room is already booked")
+        # if hotelroom.status == True:
+        #     raise serializers.ValidationError("Hotel room is already booked")
         return attrs
 
     def create(self, validated_data):
