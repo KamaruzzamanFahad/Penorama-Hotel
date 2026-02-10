@@ -196,6 +196,11 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
 }
 
+
+
+DOMAIN = 'https://transcendent-torrone-3b8c55.netlify.app'
+SITE_NAME = 'Penorama Hotel'
+
 DJOSER ={
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
