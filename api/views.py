@@ -7,6 +7,7 @@ from django.conf import settings as django_settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from rest_framework.permissions import IsAuthenticated
+from users.models import User
 
 
 
@@ -60,30 +61,23 @@ def initiate_payment(request):
 @api_view(['POST'])
 def payment_success(request):
     tran_id = request.POST.get('tran_id') or request.GET.get('tran_id')
-    amount = request.POST.get('total_amount') or request.GET.get('total_amount')
+    amount = request.POST.get('amount') or request.GET.get('amount')
 
     if not tran_id or not amount:
-        return HttpResponseRedirect(
-            f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail"
-        )
-
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail")
+        
     try:
         user_id = tran_id.split('_')[2]
+        user = User.objects.get(id=user_id)
+        user.balance += int(float(amount))
+        user.save()
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=success")
     except:
-        return HttpResponseRedirect(
-            f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail"
-        )
+        print("error")
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail")
 
-    from django.contrib.auth.models import User
-    user = User.objects.get(id=user_id)
-    user.balance += int(float(amount))
-    user.save()
-
-    return HttpResponseRedirect(
-        f"{django_settings.FRONTEND_URL}dashboard/payment?status=success"
-    )
-
-
+    
+    
 @api_view(['POST'])
 def payment_fail(request):
     return HttpResponseRedirect(
