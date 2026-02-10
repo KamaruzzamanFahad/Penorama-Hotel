@@ -42,7 +42,7 @@ def initate_payment(request):
         return Response({'error': 'Payment failed'})
     
 
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 def payment_success(request):
     # print("request: ", request.data.get('tran_id').split('_')[2])
     user_id = request.data.get('tran_id').split('_')[2]
