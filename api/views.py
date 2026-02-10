@@ -50,15 +50,15 @@ def payment_success(request):
         user = User.objects.get(id=user_id)
         user.balance += int(request.data.get('total_amount'))
         user.save()
-        return HttpResponseRedirect(django_settings.FRONTEND_URL + "dashboard/payment?status=success")
-    return HttpResponseRedirect(django_settings.FRONTEND_URL + "dashboard/payment?status=fail")
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=success")
+    return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail")
 
 @api_view(['POST'])
 def payment_fail(request):
-    return HttpResponseRedirect(django_settings.FRONTEND_URL + "dashboard/payment?status=fail")
+    return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail")
 
 @api_view(['POST'])
 def payment_cancel(request):
-    return HttpResponseRedirect(django_settings.FRONTEND_URL + "dashboard/payment?status=cancel")
+    return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=cancel")
 
 
