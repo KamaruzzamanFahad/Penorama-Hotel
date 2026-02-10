@@ -257,4 +257,4 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 FRONTEND_URL = "http://localhost:5173/"
-BACKEND_URL = "http://127.0.0.1:8000/api/v1/"
+BACKEND_URL = "https://penorama-hotel.vercel.app/api/v1/"
