@@ -64,17 +64,17 @@ def payment_success(request):
     amount = request.POST.get('amount') or request.GET.get('amount')
 
     if not tran_id or not amount:
-        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail")
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail&tran_id={tran_id}&amount={amount}")
         
     try:
         user_id = tran_id.split('_')[2]
-        user = User.objects.get(id=user_id)
+        user = User.objects.get(id=int(user_id))
         user.balance += int(float(amount))
         user.save()
         return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=success")
     except:
         print("error")
-        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail")
+        return HttpResponseRedirect(f"{django_settings.FRONTEND_URL}dashboard/payment?status=fail&user_id={user_id}")
 
     
     
