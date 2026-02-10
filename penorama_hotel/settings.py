@@ -198,7 +198,7 @@ SIMPLE_JWT = {
 
 
 
-DOMAIN = 'https://transcendent-torrone-3b8c55.netlify.app'
+DOMAIN = 'transcendent-torrone-3b8c55.netlify.app'
 SITE_NAME = 'Penorama Hotel'
 
 DJOSER ={
@@ -210,7 +210,6 @@ DJOSER ={
         'current_user': 'users.serializers.UserSerializer',
     },
     'PERMISSIONS': {
-        # অ্যাক্টিভেশন যেন লগইন ছাড়াই করা যায়
         'activation': ['rest_framework.permissions.AllowAny'],
         'user_create': ['rest_framework.permissions.AllowAny'],
     },
